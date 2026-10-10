@@ -1,6 +1,6 @@
 # Supervision polygon check
 
-[Interactive before/after demo](https://christophdeil.com/supervision-poly-check/) · [Proposed Supervision change](https://github.com/cdeil/supervision/pull/1)
+[Interactive before/after demo](https://christophdeil.com/supervision-poly-check/) · [Proposed Supervision change](https://github.com/roboflow/supervision/pull/2714)
 
 Identical COCO polygons produce different masks in Supervision and pycocotools. A square spanning `(1,1)` to `(5,5)` gives 25 pixels with inclusive integer fill and 16 with COCO's reference convention. The proposal adds an opt-in `mask_rasterizer="pycocotools"` to the COCO loader, preserving current defaults.
 
