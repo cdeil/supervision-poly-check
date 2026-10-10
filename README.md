@@ -39,6 +39,6 @@ GitHub Actions regenerates and compares the published data on Linux before deplo
 - [Comment draft for the existing compact-resize report](review/compact-resize-comment.md)
 - [Execution plan](docs/plans/plan-coco-polygons.md)
 
-The issue and upstream PR text are drafts for review. The fork contains the implementation; these files do not imply an upstream submission.
+The issue and upstream PR text are drafts for review. The [fork review PR](https://github.com/cdeil/supervision/pull/1) contains the implementation; these files do not imply an upstream submission.
 
 For exact mask preservation when exporting COCO, RLE is needed: existing contour-to-polygon export is a separate issue and is not changed by this loader proposal.

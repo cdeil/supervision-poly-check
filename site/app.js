@@ -6,7 +6,7 @@ const ns='http://www.w3.org/2000/svg';
 function el(tag, attrs, content) {const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs||{}))e.setAttribute(k,String(v));if(content!==undefined)e.textContent=content;return e;}
 function draw(containerId, mode) {
   const box=$(containerId);box.replaceChildren();
-  const svg=el('svg',{viewBox:'0 0 320 328',role:'img','aria-label':`${activeCase.title}: ${mode==='sv'?`${view()==='after'?'After':'Before'} Supervision mask`:mode==='coco'?'COCO reference mask':'pixel differences'}`});
+  const svg=el('svg',{viewBox:'0 0 320 328',role:'img','aria-label':`${activeCase.title}: ${mode==='sv'?`${view()==='after'?'After':'Before'} Supervision mask`:mode==='coco'?(view()==='side'?'After Supervision mask':'COCO reference mask'):'pixel differences'}`});
   svg.append(el('title',{},`${activeCase.title}, offset ${sample.offset.toFixed(2)} pixels`));
   svg.append(el('desc',{},`${sample.svArea} Supervision pixels, ${sample.cocoArea} COCO pixels; ${sample.extra} Supervision-only pixels and ${sample.missing} COCO-only pixels.`));
   const ox=30,oy=18,cell=33,size=cell*8;
@@ -18,8 +18,8 @@ function draw(containerId, mode) {
     if(mode==='coco'&&b)fill=colors.coco;
     if(mode==='diff'){if(a&&b)fill=colors.shared;else if(a){fill=colors.extra;glyph='+';}else if(b){fill=colors.missing;glyph='−';}}
     const r=el('rect',{x:ox+x*cell,y:oy+y*cell,width:cell,height:cell,fill,class:'pixel','data-pixel':i});
-    r.append(el('title',{},`row ${y}, column ${x} · Supervision ${a} · COCO ${b}`));
-    const inspect=()=>{$('pixel-detail').textContent=`Row ${y}, column ${x} · continuous centre (${x+.5}, ${y+.5}) · Supervision: ${a} · COCO: ${b}`;};
+    r.append(el('title',{},`row ${y}, column ${x} · ${view()==='after'?'After':'Before'} Supervision ${a} · ${view()==='side'?'After':'COCO'} ${b}`));
+    const inspect=()=>{$('pixel-detail').textContent=`Row ${y}, column ${x} · continuous centre (${x+.5}, ${y+.5}) · ${view()==='after'?'After':'Before'} Supervision: ${a} · ${view()==='side'?'After':'COCO'}: ${b}`;};
     r.addEventListener('pointerenter',inspect);r.addEventListener('click',inspect);svg.append(r);
     if(glyph)svg.append(el('text',{x:ox+(x+.5)*cell,y:oy+(y+.5)*cell+5,'text-anchor':'middle',fill:'#384656','font-size':16,'font-family':'monospace','pointer-events':'none'},glyph));
     if($('centers').checked)svg.append(el('circle',{cx:ox+(x+.5)*cell,cy:oy+(y+.5)*cell,r:1.6,fill:'#1b2938',opacity:.5,'pointer-events':'none'}));
@@ -50,10 +50,11 @@ function render(){
   activeCase=data.cases.find(c=>c.id===$('shape').value);sample=activeCase.samples[Number($('offset').value)];
   const mode=view(),beforeArea=sample.svArea;
   if(mode==='after')sample={...sample,supervision:sample.proposed,...sample.after};
+  if(mode==='side')sample={...sample,coco:sample.proposed};
   const leftName=mode==='after'?'After · Supervision':'Before · Supervision';
   $('sv-name').textContent=leftName;$('binary-name').textContent=leftName;
   $('sv-description').textContent=mode==='after'?'Opt-in · mask_rasterizer="pycocotools"':'Default · rounded vertices · inclusive fill';
-  $('coco-name').textContent=mode==='side'?'After · Supervision':'COCO reference';
+  $('coco-name').textContent=mode==='side'?'After · Supervision':'COCO reference';$('binary-reference-name').textContent=mode==='side'?'After · Supervision':'COCO';
   $('coco-description').textContent=mode==='side'?'Opt-in reference mode · matches COCO exactly':'pycocotools polygon → RLE';
   $('extra-label').textContent=mode==='after'?'After only':'Before only';
   $('missing-label').textContent=mode==='side'?'After only':'Reference only';
