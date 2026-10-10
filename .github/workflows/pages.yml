@@ -2,7 +2,7 @@ name: Reproduce and deploy
 
 on:
   push:
-    branches: [main, coco-polygon-demo]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -22,20 +22,19 @@ jobs:
         with:
           version: "0.13.0"
           enable-cache: true
-      - run: uv sync --locked
-      - run: uv run --locked ruff check .
-      - run: uv run --locked pytest -q
+      - run: uv sync --locked --extra before
+      - run: uv run --locked --extra before ruff check .
+      - run: uv run --locked --extra before pytest -q
       - name: Reproduce baseline
-        run: uv run --locked python reproduce.py --output results/baseline.json
+        run: uv run --locked --extra before python reproduce.py --output results/baseline.json
       - name: Reproduce actual patched loader
         run: >-
-          uv run --locked --with-requirements requirements-proposal.txt
-          --with "supervision[coco] @ git+https://github.com/cdeil/supervision@754ce36b6d546395ea56522b7a06466b80492acb"
+          uv run --locked --extra after
           python reproduce.py --baseline results/baseline.json --output site/masks.json
       - name: Verify published measurements
         run: |
           git diff --exit-code -- site/masks.json
-          uv run --locked pytest -q
+          uv run --locked --extra before pytest -q
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site

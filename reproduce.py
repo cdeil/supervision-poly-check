@@ -4,6 +4,7 @@ import argparse
 import importlib.metadata
 import json
 import tempfile
+import tomllib
 from pathlib import Path
 
 import numpy as np
@@ -63,6 +64,8 @@ def compare(actual: np.ndarray, reference: np.ndarray) -> dict:
 def measure(baseline: dict | None = None) -> dict:
     """Measure seven shapes at twenty-one offsets with the installed libraries."""
     cases = json.loads((ROOT / "fixtures.json").read_text(encoding="utf-8"))
+    config = tomllib.loads((ROOT / "pyproject.toml").read_text())
+    proposal = config["tool"]["uv"]["sources"]["supervision"][0]
     result = {
         "canvas": [SIZE, SIZE],
         "versions": {
@@ -74,9 +77,7 @@ def measure(baseline: dict | None = None) -> dict:
                 "numpy",
             ]
         },
-        "proposalSource": (ROOT / "proposal-ref.txt").read_text().strip()
-        if baseline
-        else None,
+        "proposalSource": f"{proposal['git']}/tree/{proposal['rev']}" if baseline else None,
         "baselineVersions": baseline["versions"] if baseline else None,
         "cases": [],
     }

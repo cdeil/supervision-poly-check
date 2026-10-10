@@ -1,6 +1,10 @@
 version = 1
 revision = 5
 requires-python = ">=3.14"
+conflicts = [[
+    { package = "supervision-poly-check", extra = "after" },
+    { package = "supervision-poly-check", extra = "before" },
+]]
 
 [[package]]
 name = "av"
@@ -590,7 +594,7 @@ name = "pytest"
 version = "9.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-22-supervision-poly-check-after' and extra == 'extra-22-supervision-poly-check-before')" },
     { name = "iniconfig" },
     { name = "packaging" },
     { name = "pluggy" },
@@ -761,13 +765,43 @@ wheels = [
 ]
 
 [[package]]
+name = "supervision"
+version = "0.31.0.dev0"
+source = { git = "https://github.com/cdeil/supervision?rev=754ce36b6d546395ea56522b7a06466b80492acb#754ce36b6d546395ea56522b7a06466b80492acb" }
+dependencies = [
+    { name = "av" },
+    { name = "defusedxml" },
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pillow" },
+    { name = "pydeprecate" },
+    { name = "pyyaml" },
+    { name = "requests" },
+    { name = "scipy" },
+    { name = "tqdm" },
+]
+
+[package.optional-dependencies]
+coco = [
+    { name = "pycocotools" },
+]
+
+[[package]]
 name = "supervision-poly-check"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "numpy" },
     { name = "opencv-python-headless" },
     { name = "pycocotools" },
-    { name = "supervision" },
+]
+
+[package.optional-dependencies]
+after = [
+    { name = "supervision", version = "0.31.0.dev0", source = { git = "https://github.com/cdeil/supervision?rev=754ce36b6d546395ea56522b7a06466b80492acb#754ce36b6d546395ea56522b7a06466b80492acb" }, extra = ["coco"], marker = "extra == 'extra-22-supervision-poly-check-after'" },
+]
+before = [
+    { name = "supervision", version = "0.30.9", source = { registry = "https://pypi.org/simple" } },
 ]
 
 [package.dev-dependencies]
@@ -778,15 +812,18 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "numpy", specifier = "==2.5.3" },
     { name = "opencv-python-headless", specifier = "==5.0.0.93" },
     { name = "pycocotools", specifier = "==2.0.11" },
-    { name = "supervision", specifier = "==0.30.9" },
+    { name = "supervision", marker = "extra == 'before'", specifier = "==0.30.9" },
+    { name = "supervision", extras = ["coco"], marker = "extra == 'after'", git = "https://github.com/cdeil/supervision?rev=754ce36b6d546395ea56522b7a06466b80492acb" },
 ]
+provides-extras = ["before", "after"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "pytest", specifier = ">=9.1.1" },
-    { name = "ruff", specifier = ">=0.17.0" },
+    { name = "pytest", specifier = "==9.1.1" },
+    { name = "ruff", specifier = "==0.17.0" },
 ]
 
 [[package]]
