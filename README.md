@@ -14,7 +14,7 @@ The proposed change adds an opt-in `mask_rasterizer="pycocotools"` to `Detection
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then:
 
 ```bash
-git clone https://github.com/cdeil/supervision-poly-check.git
+git clone --branch coco-polygon-demo https://github.com/cdeil/supervision-poly-check.git
 cd supervision-poly-check
 uv sync --locked
 uv run --locked pytest -q

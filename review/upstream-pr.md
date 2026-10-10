@@ -4,7 +4,7 @@ COCO polygon loading uses rounded integer vertices with inclusive fill, so a squ
 
 See the issue and effect visually: **[interactive before/after demo](https://christophdeil.com/supervision-poly-check/)**. Select “After proposal” or the side-by-side view. [uv reproducer and measured data](https://github.com/cdeil/supervision-poly-check) pin both the released baseline and the actual proposed loader; all 147 after masks match the reference.
 
-<img src="https://raw.githubusercontent.com/cdeil/supervision-poly-check/coco-polygon-demo/site/before-after.png" width="900" alt="At a 0.65 pixel offset, the same square gives 25 pixels before and 16 after; pixel centres and rounded vertices show the boundary difference.">
+<img src="https://raw.githubusercontent.com/cdeil/supervision-poly-check/9272c3faf2c699683c4cbe6ed73f6bea6ae355e0/site/before-after.png" width="900" alt="At a 0.65 pixel offset, the same square gives 25 pixels before and 16 after; pixel centres and rounded vertices show the boundary difference.">
 
 ## Motivation and Context
 
