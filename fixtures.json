@@ -1,0 +1,191 @@
+[
+  {
+    "id": "square",
+    "title": "Square",
+    "note": "A geometric 4 \u00d7 4 square becomes an inclusive 5 \u00d7 5 mask in Supervision.",
+    "polygons": [
+      [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          5.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "thin",
+    "title": "Thin rectangle",
+    "note": "A single extra column has a large effect on a one-pixel-wide object.",
+    "polygons": [
+      [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          2.0,
+          1.0
+        ],
+        [
+          2.0,
+          6.0
+        ],
+        [
+          1.0,
+          6.0
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "triangle",
+    "title": "Diagonal triangle",
+    "note": "Different edge rules also change the staircase along a diagonal.",
+    "polygons": [
+      [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          6.0,
+          1.0
+        ],
+        [
+          1.0,
+          6.0
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "slanted",
+    "title": "Slanted polygon",
+    "note": "The larger mask can still miss a COCO pixel. The difference is not a uniform expansion.",
+    "polygons": [
+      [
+        [
+          1.2,
+          1.4
+        ],
+        [
+          5.7,
+          2.2
+        ],
+        [
+          4.8,
+          6.1
+        ],
+        [
+          1.6,
+          5.7
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "tiny",
+    "title": "Subpixel sliver",
+    "note": "Rounding collapses this polygon to a line; inclusive drawing still marks pixels. COCO initially marks none.",
+    "polygons": [
+      [
+        [
+          1.2,
+          1.2
+        ],
+        [
+          1.4,
+          1.2
+        ],
+        [
+          1.4,
+          6.2
+        ],
+        [
+          1.2,
+          6.2
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "parts",
+    "title": "Disjoint squares",
+    "note": "Each component accumulates its own boundary differences.",
+    "polygons": [
+      [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          3.0,
+          1.0
+        ],
+        [
+          3.0,
+          3.0
+        ],
+        [
+          1.0,
+          3.0
+        ]
+      ],
+      [
+        [
+          4.0,
+          4.0
+        ],
+        [
+          6.0,
+          4.0
+        ],
+        [
+          6.0,
+          6.0
+        ],
+        [
+          4.0,
+          6.0
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "ties",
+    "title": "Half-pixel ties",
+    "note": "NumPy rounds exact halves to even. Here the extra pixels are on the top and left.",
+    "polygons": [
+      [
+        [
+          2.5,
+          2.5
+        ],
+        [
+          6.5,
+          2.5
+        ],
+        [
+          6.5,
+          6.5
+        ],
+        [
+          2.5,
+          6.5
+        ]
+      ]
+    ]
+  }
+]

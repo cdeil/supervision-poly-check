@@ -1,0 +1,92 @@
+{
+  "compact_resize_square": {
+    "actual_area": 3600,
+    "reference_area": 3600,
+    "different_pixels": 0
+  },
+  "compact_resize_line": {
+    "actual_area": 320,
+    "reference_area": 320,
+    "different_pixels": 0
+  },
+  "resize_masks_sampling": {
+    "actual": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "opencv_nearest": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  },
+  "rle_size_mismatch": {
+    "encoded_size": [
+      2,
+      8
+    ],
+    "loaded_size": [
+      4,
+      4
+    ],
+    "accepted": true,
+    "mask": [
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "hole_export": {
+    "original_instances": 1,
+    "original_area": 2100,
+    "exported_label_lines": 2
+  },
+  "contour_coco_roundtrip": {
+    "original_area": 16,
+    "reference_reloaded_area": 9,
+    "polygon": [
+      [
+        1,
+        1,
+        1,
+        4,
+        4,
+        4,
+        4,
+        1
+      ]
+    ]
+  }
+}
