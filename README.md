@@ -5,7 +5,7 @@ GitHub Pages also serves it through [cdeil.github.io](https://cdeil.github.io/su
 
 The same COCO polygon produces different masks in Supervision and pycocotools. A square from `(1, 1)` to `(5, 5)` has 25 pixels with Supervision's inclusive integer fill and 16 with COCO's reference rasterization. This is a COCO-loading compatibility bug caused by different conventions, not just a subpixel translation. The generic inclusive drawing function has a valid, documented convention.
 
-The proposed change adds an opt-in `mask_rasterizer="pycocotools"` to `DetectionDataset.from_coco`, with an optional `supervision[coco]` dependency. Existing defaults stay unchanged. The demo shows actual outputs from the proposed loader; all 147 after masks match the reference exactly. It starts on the square at +0.65 px with pixel centres and rounded Supervision vertices visible. Use **After proposal** or **Before / after side by side** to inspect the change.
+The proposed change adds an opt-in `mask_rasterizer="pycocotools"` to `DetectionDataset.from_coco`, with an optional `supervision[coco]` dependency. Existing defaults stay unchanged. The demo shows actual outputs from the proposed loader; all 147 after masks match the reference exactly. It starts on the square at +0.65 px with pixel centres and rounded Supervision vertices visible. Use **After** or **Side by side** to inspect the change.
 
 ![Before and after, with geometric boundaries and pixel centres](site/before-after.png)
 

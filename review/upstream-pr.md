@@ -2,9 +2,9 @@
 
 COCO polygon loading uses rounded integer vertices with inclusive fill, so a square spanning `(1,1)` to `(5,5)` becomes 25 pixels instead of pycocotools' reference 16. This PR adds opt-in reference rasterization to `DetectionDataset.from_coco` through `mask_rasterizer="pycocotools"`. Existing callers retain their current masks.
 
-See the issue and effect visually: **[interactive before/after demo](https://christophdeil.com/supervision-poly-check/)**. Select “After proposal” or the side-by-side view. [uv reproducer and measured data](https://github.com/cdeil/supervision-poly-check) pin both the released baseline and the actual proposed loader; all 147 after masks match the reference.
+See the issue and effect visually: **[interactive before/after demo](https://christophdeil.com/supervision-poly-check/)**. Select “After” or the side-by-side view. [uv reproducer and measured data](https://github.com/cdeil/supervision-poly-check) pin both the released baseline and the actual proposed loader; all 147 after masks match the reference.
 
-<img src="https://raw.githubusercontent.com/cdeil/supervision-poly-check/9272c3faf2c699683c4cbe6ed73f6bea6ae355e0/site/before-after.png" width="900" alt="At a 0.65 pixel offset, the same square gives 25 pixels before and 16 after; pixel centres and rounded vertices show the boundary difference.">
+<img src="https://raw.githubusercontent.com/cdeil/supervision-poly-check/a2130bfdcd4985bf3eefb3533b7c1887e36b04a3/site/before-after.png" width="900" alt="At a 0.65 pixel offset, the same square gives 25 pixels before and 16 after; pixel centres and rounded vertices show the boundary difference.">
 
 ## Motivation and Context
 

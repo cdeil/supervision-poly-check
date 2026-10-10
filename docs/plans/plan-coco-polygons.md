@@ -19,3 +19,5 @@ The implementation preserves existing loader defaults and generic polygon fill. 
 The audit also reproduced a separate contour-to-COCO round-trip loss and missing RLE declared-shape validation. Current develop now passes the two original compact-resize report examples after merged #2697. Submission remains pending human review.
 
 Review PRs: [reproducer](https://github.com/cdeil/supervision-poly-check/pull/1) and [Supervision fork](https://github.com/cdeil/supervision/pull/1). The upstream issue and PR have not been submitted; approve the drafts before posting.
+
+After review feedback, replaced the editorial layout with a compact results page: all three masks and metrics fit in the first desktop viewport. Refreshed the PR screenshot and retained the requested overlays and +0.65 px default.
