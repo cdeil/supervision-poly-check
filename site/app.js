@@ -48,7 +48,7 @@ function view(){return document.querySelector('input[name="view"]:checked').valu
 function render(){
   if(!data)return;
   activeCase=data.cases.find(c=>c.id===$('shape').value);sample=activeCase.samples[Number($('offset').value)];
-  const mode=view(),beforeArea=sample.svArea;
+  const mode=view();
   if(mode==='after')sample={...sample,supervision:sample.proposed,...sample.after};
   if(mode==='side')sample={...sample,coco:sample.proposed};
   const leftName=mode==='after'?'After · Supervision':'Before · Supervision';
@@ -58,7 +58,6 @@ function render(){
   $('coco-description').textContent=mode==='side'?'Opt-in reference mode · matches COCO exactly':'pycocotools polygon → RLE';
   $('extra-label').textContent=mode==='after'?'After only':'Before only';
   $('missing-label').textContent=mode==='side'?'After only':'Reference only';
-  $('proposal-note').textContent=mode==='before'?'Before: current default output. The proposal keeps this default and adds an opt-in reference mode.':`After proposal: ${sample.cocoArea} pixels, versus ${beforeArea} before. All 147 measured after masks match COCO exactly; zero differing pixels.`;
 
   $('offset-value').textContent=`+${sample.offset.toFixed(2)} px`;
   $('offset').setAttribute('aria-valuetext',`${sample.offset.toFixed(2)} pixels right and down`);
@@ -71,11 +70,11 @@ function render(){
   const binary=m=>Array.from({length:8},(_,y)=>m.slice(y*8,y*8+8).join('')).join('\n');
   $('sv-binary').textContent=binary(sample.supervision);$('coco-binary').textContent=binary(sample.coco);
   draw('sv-plot','sv');draw('coco-plot','coco');draw('diff-plot','diff');
-  $('pixel-detail').textContent='Hover or tap a pixel to inspect its row, column and mask values.';
+  $('pixel-detail').textContent='Tap a pixel to inspect.';
 }
 for(const control of document.querySelectorAll('input[name="view"]'))control.addEventListener('change',render);
 for(const id of ['shape','outline','centers','rounded'])$(id).addEventListener('change',render);
 $('offset').addEventListener('input',render);
 $('reset').addEventListener('click',()=>{document.querySelector('input[name="view"][value="before"]').checked=true;$('shape').value='square';$('offset').value=13;$('outline').checked=true;$('centers').checked=true;$('rounded').checked=true;render();});
 $('download').addEventListener('click',()=>{if(!sample)return;const blob=new Blob([JSON.stringify({versions:data.versions,proposalSource:data.proposalSource,view:view(),canvas:[8,8],case:activeCase.id,...sample},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${activeCase.id}-offset-${sample.offset.toFixed(2)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
-fetch('masks.json').then(r=>{if(!r.ok)throw new Error('Could not load measured masks');return r.json();}).then(d=>{data=d;if(data.proposalSource)$('proposal-link').href=data.proposalSource;render();}).catch(()=>{$('case-note').textContent='The measured masks could not be loaded. Reload the page to try again.';$('case-note').setAttribute('role','alert');});
+fetch('masks.json').then(r=>{if(!r.ok)throw new Error('Could not load measured masks');return r.json();}).then(d=>{data=d;if(data.proposalSource)$('proposal-link').href=data.proposalSource;render();}).catch(()=>{$('case-note').hidden=false;$('case-note').textContent='The measured masks could not be loaded. Reload the page to try again.';$('case-note').setAttribute('role','alert');});
