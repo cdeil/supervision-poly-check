@@ -1,0 +1,24 @@
+[project]
+name = "supervision-poly-check"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "numpy==2.5.3",
+    "opencv-python-headless==5.0.0.93",
+    "pycocotools==2.0.11",
+]
+
+[project.optional-dependencies]
+before = ["supervision==0.30.9"]
+after = ["supervision[coco]==0.31.0.dev0"]
+
+[dependency-groups]
+dev = ["pytest==9.1.1", "ruff==0.17.0"]
+
+[tool.uv]
+conflicts = [[{ extra = "before" }, { extra = "after" }]]
+
+[tool.uv.sources]
+supervision = [
+    { git = "https://github.com/cdeil/supervision", rev = "754ce36b6d546395ea56522b7a06466b80492acb", extra = "after" },
+]

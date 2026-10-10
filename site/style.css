@@ -1,0 +1,60 @@
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1c2635;background:#fff;font-size:14px;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0}
+main{max-width:1220px;margin:auto;padding:16px 20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+h1{font-size:20px;line-height:1.2;margin:0 0 4px}
+.versions{font-size:12px;color:#596574}
+nav{display:flex;gap:16px;flex-wrap:wrap;font-size:13px}
+a{color:#276f64;text-underline-offset:3px}
+.toolbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:10px}
+.view-switch{border:0;padding:0;margin:0;display:flex;gap:4px;flex-shrink:0}
+.view-switch label{display:flex;align-items:center;gap:5px;border:1px solid #d3dbd7;border-radius:5px;padding:7px 9px;cursor:pointer;font-size:13px}
+.view-switch label:has(input:checked){background:#1c2635;color:white;border-color:#1c2635}
+input{accent-color:#287e70}
+input[type=radio],input[type=checkbox]{margin:0}
+.shape-field,.offset-field{display:flex;align-items:center;gap:8px}
+.shape-field label,.offset-field label{font-size:12px;color:#596574;white-space:nowrap}
+select,button{font:inherit;background:white;border:1px solid #cbd5d0;border-radius:5px;padding:6px 8px;color:inherit}
+select{width:170px}
+button{cursor:pointer;font-size:12px}
+.offset-field{flex:1;min-width:250px}
+input[type=range]{flex:1;min-width:80px;margin:0}
+output{font:600 12px ui-monospace,SFMono-Regular,monospace;min-width:64px;white-space:nowrap}
+.options{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:12px;margin-bottom:12px}
+.options label{display:flex;align-items:center;gap:5px}
+.options button{margin-left:auto;padding:3px 8px}
+.panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.panel{border:1px solid #d7dfda;border-radius:6px;padding:12px 10px 3px;min-width:0}
+.diff-panel{background:#f6f8f5}
+.panel-head{display:flex;align-items:start;justify-content:space-between;gap:8px;min-height:54px}
+h2{font-size:15px;margin:0 0 4px;font-weight:650}
+.panel-head p{font-size:11px;line-height:1.45;margin:0;color:#596574}
+.area{display:flex;align-items:baseline;gap:4px;white-space:nowrap}
+.area strong{font-size:24px;font-weight:650;line-height:1}
+.area span{font-size:10px;color:#596574}
+.plot{display:flex;justify-content:center}
+.plot svg{display:block;width:100%;max-width:340px;height:auto}
+.axis-label{font:11px ui-monospace,SFMono-Regular,monospace;fill:#617080}
+.pixel{cursor:crosshair}
+.pixel:hover{stroke:#1c2635;stroke-width:1.5}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0;font-size:11px;color:#435265}
+.legend>span{display:flex;align-items:center;gap:5px}
+.swatch{width:12px;height:12px;display:inline-flex;align-items:center;justify-content:center;font:11px monospace;color:#384656}
+.shared{background:#8dc6bd}.extra{background:#edab82}.missing{background:#b6b0e0}
+.line-key{width:18px;border-top:2px solid #1b2938}.line-key.dashed{border-color:#7b66ad;border-top-style:dashed}
+.readout{display:flex;gap:20px;align-items:baseline;flex-wrap:wrap;border-top:1px solid #d7dfda;padding-top:10px;font-size:13px}
+.readout strong{font:600 21px ui-monospace,SFMono-Regular,monospace}
+.verification{margin-left:auto;color:#276f64;font-size:12px}
+.pixel-detail{font:11px ui-monospace,SFMono-Regular,monospace;color:#596574;margin:10px 0;min-height:14px}
+.coordinates{border-top:1px solid #d7dfda;padding-top:8px;font-size:12px}
+summary{cursor:pointer;color:#435265}
+.coordinate-content{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:12px 0}
+h3{font-size:12px;margin:0 0 8px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.6 ui-monospace,SFMono-Regular,monospace;margin:0 0 14px}
+.binary-pair{display:flex;gap:25px}
+.binary-pair span{display:block;font-size:11px;margin-bottom:8px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid #287e70;outline-offset:3px}
+@media(max-width:740px){main{padding:12px}header{align-items:start;flex-wrap:wrap;margin-bottom:12px}.toolbar{gap:10px}.panels{grid-template-columns:1fr}.panel-head{min-height:38px}.plot svg{max-width:320px}.verification{margin-left:0}.coordinate-content{grid-template-columns:1fr}.options{gap:10px}.readout{gap:12px}}
