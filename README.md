@@ -27,10 +27,10 @@ GitHub Actions regenerates the data on Linux and checks it against the committed
 
 ## Decision notes
 
-The separate [decision page](https://christophdeil.com/supervision-poly-check/choices.html) compares three choices for the COCO loader: keep the current behavior, switch to reference rasterization, or offer both explicitly. It also shows why OpenCV-based paths can disagree and why existing contour exports matter. The original before/after page is unchanged.
+The separate [decision page](https://christophdeil.com/supervision-poly-check/choices.html) compares four complete scopes with a + / 0 / − table: keep current behavior, change import only, change import and export, or support both import modes with an export fix. It distinguishes existing export losses from additional losses caused by an import-only change. The original before/after page is unchanged.
 
 ```bash
 uv run --locked --extra before python choices_data.py
 ```
 
-Open `http://localhost:8000/choices.html` using the server above. This measures 63 examples with the actual Supervision loader, pycocotools, and an independent OpenCV truncation/fill experiment. The latter reproduces the fill steps used by Ultralytics' helper for one full-resolution polygon; it does not install or run Ultralytics. A separate contour example demonstrates a possible migration cost. Source links on the page identify the inspected operations; they do not imply whole-library equivalence.
+Open `http://localhost:8000/choices.html` using the server above. Three export examples (rectangle, single pixel, hole) use the actual Supervision export helper with `iscrowd=0` and no simplification. They compare the existing and reference importers with a lossless RLE encoding experiment. RLE export API changes are proposed scope, not implemented in the upstream PR. The expandable import comparison retains 63 measured examples; its OpenCV truncation path models one full-resolution polygon without installing or running Ultralytics.

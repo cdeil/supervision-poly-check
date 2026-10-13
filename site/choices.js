@@ -50,22 +50,33 @@ function showData(data) {
     }
     const delta = difference(sample.supervision, sample.opencvTruncated);
     element("comparison").textContent = delta
-      ? `Supervision and truncation differ at ${delta} pixels here, despite both using OpenCV integer fill. Same backend does not mean the same mask.`
-      : "Supervision and truncation match here. Move the square past +0.50 px to see rounding and truncation diverge.";
+      ? `Rounding and truncation differ at ${delta} pixels here, despite using the same integer-fill backend.`
+      : "Rounding and truncation match here. Try the square at +0.65 px.";
   }
   element("shape").addEventListener("change", render);
   element("offset").addEventListener("input", render);
   render();
 
-  const roundTrip = data.roundTrip;
-  for (const [id, mask, title] of [
-    ["source", roundTrip.source, "Original rectangle"],
-    ["reload", roundTrip.supervision, "Current reload of contour"],
-    ["reference-reload", roundTrip.coco, "COCO reload of contour"],
-  ]) {
-    element(`${id}-area`).textContent = area(mask);
-    element(`${id}-plot`).innerHTML = plot(mask, null, null, `${title}: ${area(mask)} filled pixels`);
+  function renderRoundTrip() {
+    const roundTrip = data.roundTrips.find((item) => item.id === element("roundtrip-case").value);
+    for (const [id, mask, title] of [
+      ["source", roundTrip.source, "Original mask"],
+      ["reload", roundTrip.supervision, "Current export and import"],
+      ["reference-reload", roundTrip.coco, "Current export and COCO import"],
+      ["rle", roundTrip.rle, "RLE export and reload"],
+    ]) {
+      element(`${id}-area`).textContent = area(mask);
+      element(`${id}-plot`).innerHTML = plot(mask, null, null, `${title}: ${area(mask)} filled pixels`);
+    }
+    const messages = {
+      rectangle: "Additional loss: 16 → 16 today, but 16 → 9 if only import changes. RLE keeps all 16 pixels.",
+      pixel: "Existing loss: export produces no polygon, so neither importer can recover the pixel. RLE preserves it.",
+      hole: "Existing loss: forced instance-polygon export fills the hole. COCO import also changes the boundary; RLE preserves the original mask.",
+    };
+    element("roundtrip-result").textContent = messages[roundTrip.id];
   }
+  element("roundtrip-case").addEventListener("change", renderRoundTrip);
+  renderRoundTrip();
 }
 
 fetch("choices.json")
@@ -75,5 +86,5 @@ fetch("choices.json")
   })
   .then(showData)
   .catch(() => {
-    element("comparison").textContent = "Could not load measured masks. Serve the site through HTTP and reload; choices.json contains the raw data.";
+    element("roundtrip-result").textContent = "Could not load measured masks. Serve through HTTP and reload; choices.json contains the raw data.";
   });
