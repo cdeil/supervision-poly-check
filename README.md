@@ -27,7 +27,7 @@ GitHub Actions regenerates the data on Linux and checks it against the committed
 
 ## Decision notes
 
-The separate [decision page](https://christophdeil.com/supervision-poly-check/choices.html) proposes reference COCO import and an export fix in two PRs for one release. A + / 0 / − table compares pixel-edge polygons with RLE as the default export. Core pycocotools versus a NumPy port, the hole policy and the release transition remain maintainer decisions. The original before/after page still demonstrates the current opt-in PR.
+The separate [decision page](https://christophdeil.com/supervision-poly-check/choices.html) proposes reference COCO import and an export fix in two PRs for one release. Separate + / 0 / − tables compare three import choices (keep today, opt-in reference, reference only) and two export defaults (pixel-edge polygons, RLE). Core pycocotools versus a NumPy port, the hole policy and the release transition remain maintainer decisions. The original before/after page still demonstrates the current opt-in PR.
 
 ```bash
 uv run --locked --extra before python choices_data.py

@@ -35,6 +35,8 @@ tbody tr:last-child > * { border-bottom: 0; }
 thead th { background: #f0f4f2; font-weight: 650; }
 tbody th { font-weight: 550; width: 36%; }
 td { width: 32%; }
+.import-decision tbody th { width: 34%; }
+.import-decision td { width: 22%; }
 .number { display: inline-grid; place-items: center; width: 21px; height: 21px; margin-right: 4px; background: #dfe8e4; border-radius: 50%; }
 .controls { gap: 6px; font-size: 12px; }
 select { font: inherit; padding: 4px; border: 1px solid #bac9c5; border-radius: 4px; background: white; color: inherit; }
