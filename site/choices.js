@@ -63,15 +63,23 @@ function showData(data) {
       ["source", roundTrip.source, "Original mask"],
       ["reload", roundTrip.supervision, "Current export and import"],
       ["reference-reload", roundTrip.coco, "Current export and COCO import"],
+      ["edges", roundTrip.pixelEdgeCoco, "Pixel-edge polygons and COCO import"],
       ["rle", roundTrip.rle, "RLE export and reload"],
     ]) {
+      element(`${id}-area`).classList.toggle("unavailable", mask === null);
+      element(`${id}-plot`).classList.toggle("unavailable", mask === null);
+      if (mask === null) {
+        element(`${id}-area`).textContent = "Policy needed";
+        element(`${id}-plot`).textContent = "Define hole handling; RLE preserves this mask.";
+        continue;
+      }
       element(`${id}-area`).textContent = area(mask);
       element(`${id}-plot`).innerHTML = plot(mask, null, null, `${title}: ${area(mask)} filled pixels`);
     }
     const messages = {
-      rectangle: "Additional loss: 16 → 16 today, but 16 → 9 if only import changes. RLE keeps all 16 pixels.",
-      pixel: "Existing loss: export produces no polygon, so neither importer can recover the pixel. RLE preserves it.",
-      hole: "Existing loss: forced instance-polygon export fills the hole. COCO import also changes the boundary; RLE preserves the original mask.",
+      rectangle: "Import alone adds a loss: 16 → 9. Both the pixel-edge fixture and RLE preserve all 16 pixels exactly.",
+      pixel: "Existing export loses the pixel. A one-pixel boundary polygon and RLE both preserve it exactly.",
+      hole: "Existing polygon export fills the hole. RLE preserves it; the polygon-first proposal still needs a hole policy.",
     };
     element("roundtrip-result").textContent = messages[roundTrip.id];
   }

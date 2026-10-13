@@ -27,10 +27,10 @@ GitHub Actions regenerates the data on Linux and checks it against the committed
 
 ## Decision notes
 
-The separate [decision page](https://christophdeil.com/supervision-poly-check/choices.html) compares four complete scopes with a + / 0 / − table: keep current behavior, change import only, change import and export, or support both import modes with an export fix. It distinguishes existing export losses from additional losses caused by an import-only change. The original before/after page is unchanged.
+The separate [decision page](https://christophdeil.com/supervision-poly-check/choices.html) proposes reference COCO import and an export fix in two PRs for one release. A + / 0 / − table compares pixel-edge polygons with RLE as the default export. Core pycocotools versus a NumPy port, the hole policy and the release transition remain maintainer decisions. The original before/after page still demonstrates the current opt-in PR.
 
 ```bash
 uv run --locked --extra before python choices_data.py
 ```
 
-Open `http://localhost:8000/choices.html` using the server above. Three export examples (rectangle, single pixel, hole) use the actual Supervision export helper with `iscrowd=0` and no simplification. They compare the existing and reference importers with a lossless RLE encoding experiment. RLE export API changes are proposed scope, not implemented in the upstream PR. The expandable import comparison retains 63 measured examples; its OpenCV truncation path models one full-resolution polygon without installing or running Ultralytics.
+Open `http://localhost:8000/choices.html` using the server above. Three export examples (rectangle, single pixel, hole) use the actual Supervision export helper with `iscrowd=0` and no simplification. They compare current and reference imports, hand-authored pixel-edge polygons for the two hole-free examples, and RLE encoding. These are measured encoding examples, not a general boundary tracer or an implemented export API. The expandable import comparison retains 63 measured examples; its OpenCV truncation path models one full-resolution polygon without installing or running Ultralytics.
