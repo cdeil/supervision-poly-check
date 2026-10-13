@@ -24,3 +24,13 @@ Open `http://localhost:8000`. Both Supervision versions are defined in `pyprojec
 Seven synthetic shapes × 21 offsets give 147 cases. The generator uses the actual `DetectionDataset.from_coco` loader, verifies unchanged defaults, checks every proposed mask against pycocotools, and checks RLE parity in both modes. The browser displays the measured arrays in `site/masks.json`.
 
 GitHub Actions regenerates the data on Linux and checks it against the committed results before deploying to GitHub Pages. The page defaults to +0.65 px, pixel centres and rounded vertices. Select **After** or **Side by side** to compare. No external dataset or credentials are needed.
+
+## Decision notes
+
+The separate [decision page](https://christophdeil.com/supervision-poly-check/choices.html) compares three choices for the COCO loader: keep the current behavior, switch to reference rasterization, or offer both explicitly. It also shows why OpenCV-based paths can disagree and why existing contour exports matter. The original before/after page is unchanged.
+
+```bash
+uv run --locked --extra before python choices_data.py
+```
+
+Open `http://localhost:8000/choices.html` using the server above. This measures 63 examples with the actual Supervision loader, pycocotools, and an independent OpenCV truncation/fill experiment. The latter reproduces the fill steps used by Ultralytics' helper for one full-resolution polygon; it does not install or run Ultralytics. A separate contour example demonstrates a possible migration cost. Source links on the page identify the inspected operations; they do not imply whole-library equivalence.
