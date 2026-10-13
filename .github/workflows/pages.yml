@@ -27,13 +27,15 @@ jobs:
       - run: uv run --locked --extra before pytest -q
       - name: Reproduce baseline
         run: uv run --locked --extra before python reproduce.py --output results/baseline.json
+      - name: Reproduce decision-page examples
+        run: uv run --locked --extra before python choices_data.py
       - name: Reproduce actual patched loader
         run: >-
           uv run --locked --extra after
           python reproduce.py --baseline results/baseline.json --output site/masks.json
       - name: Verify published measurements
         run: |
-          git diff --exit-code -- site/masks.json
+          git diff --exit-code -- site/masks.json site/choices.json
           uv run --locked --extra before pytest -q
       - uses: actions/upload-pages-artifact@v5
         with:

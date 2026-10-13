@@ -24,3 +24,13 @@ Open `http://localhost:8000`. Both Supervision versions are defined in `pyprojec
 Seven synthetic shapes × 21 offsets give 147 cases. The generator uses the actual `DetectionDataset.from_coco` loader, verifies unchanged defaults, checks every proposed mask against pycocotools, and checks RLE parity in both modes. The browser displays the measured arrays in `site/masks.json`.
 
 GitHub Actions regenerates the data on Linux and checks it against the committed results before deploying to GitHub Pages. The page defaults to +0.65 px, pixel centres and rounded vertices. Select **After** or **Side by side** to compare. No external dataset or credentials are needed.
+
+## Decision notes
+
+The separate [decision page](https://christophdeil.com/supervision-poly-check/choices.html) compares four complete scopes with a + / 0 / − table: keep current behavior, change import only, change import and export, or support both import modes with an export fix. It distinguishes existing export losses from additional losses caused by an import-only change. The original before/after page is unchanged.
+
+```bash
+uv run --locked --extra before python choices_data.py
+```
+
+Open `http://localhost:8000/choices.html` using the server above. Three export examples (rectangle, single pixel, hole) use the actual Supervision export helper with `iscrowd=0` and no simplification. They compare the existing and reference importers with a lossless RLE encoding experiment. RLE export API changes are proposed scope, not implemented in the upstream PR. The expandable import comparison retains 63 measured examples; its OpenCV truncation path models one full-resolution polygon without installing or running Ultralytics.
