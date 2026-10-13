@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="COCO import and export choices for Supervision, with a decision table and measured round trips.">
   <title>COCO import + export · Supervision choices</title>
-  <link rel="stylesheet" href="choices.css?v=3">
+  <link rel="stylesheet" href="choices.css?v=4">
   <script src="choices.js?v=3" defer></script>
 </head>
 <body>
@@ -18,6 +18,18 @@
     <section aria-labelledby="export-heading"><h2 id="export-heading"><span class="number">2</span> COCO export · follow-up PR</h2><p>Exact mask round trips; encoding independent of <code>iscrowd</code>. <strong>Preference:</strong> pixel-edge polygons by default, explicit RLE; holes need a policy.</p></section>
   </div>
   <p class="small scope"><strong>COCO only:</strong> <code>from_yolo</code>, <code>from_labelme</code>, <code>from_pascal_voc</code> and <code>polygon_to_mask</code> keep their existing inclusive fill. Existing RLE import is unchanged.</p>
+
+  <section aria-labelledby="import-decision-heading">
+    <div class="section-bar"><h2 id="import-decision-heading">Import: three choices</h2><p class="small rating-key"><b class="plus">+</b> meets goal <b class="mixed">0</b> conditional <b class="minus">−</b> trade-off</p></div>
+    <div class="table-scroll"><table class="decision import-decision">
+      <thead><tr><th scope="col">Goal</th><th scope="col">1. Keep today</th><th scope="col">2. Opt-in reference <span class="preference">PR today</span></th><th scope="col">3. Reference only <span class="preference">proposed</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row">COCO reference masks</th><td><b class="minus">−</b> differs</td><td><b class="mixed">0</b> opt-in</td><td><b class="plus">+</b> always</td></tr>
+        <tr><th scope="row">Existing COCO polygon imports unchanged</th><td><b class="plus">+</b></td><td><b class="plus">+</b> default preserved</td><td><b class="minus">−</b> many masks change</td></tr>
+        <tr><th scope="row">One COCO import behavior</th><td><b class="plus">+</b></td><td><b class="minus">−</b> two modes</td><td><b class="plus">+</b></td></tr>
+      </tbody>
+    </table></div>
+  </section>
 
   <section aria-labelledby="decision-heading">
     <div class="section-bar"><h2 id="decision-heading">Export default: a separate choice</h2><p class="small rating-key"><b class="plus">+</b> meets goal <b class="mixed">0</b> needs a policy <b class="minus">−</b> incompatible</p></div>
