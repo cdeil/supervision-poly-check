@@ -77,6 +77,14 @@ def measure_round_trips(root: Path) -> list[dict]:
         rle_current = load_mask(root, rle)
         np.testing.assert_array_equal(rle_reference, source)
         np.testing.assert_array_equal(rle_current, source)
+        # Hand-authored boundary fixtures, not a general mask-to-polygon exporter.
+        edge_polygons = {
+            "rectangle": [[[2, 2], [6, 2], [6, 6], [2, 6]]],
+            "pixel": [[[3, 3], [4, 3], [4, 4], [3, 4]]],
+        }.get(name)
+        edge_reference = reference_mask(edge_polygons) if edge_polygons else None
+        if edge_reference is not None:
+            np.testing.assert_array_equal(edge_reference, source)
         cases.append(
             {
                 "id": name,
@@ -89,6 +97,10 @@ def measure_round_trips(root: Path) -> list[dict]:
                 "coco": bitmap(reference),
                 "rle": bitmap(rle_reference),
                 "rleSupervision": bitmap(rle_current),
+                "pixelEdgePolygons": edge_polygons,
+                "pixelEdgeCoco": (
+                    bitmap(edge_reference) if edge_reference is not None else None
+                ),
                 "exportWarnings": [str(warning.message) for warning in captured],
             }
         )

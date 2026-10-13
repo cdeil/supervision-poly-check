@@ -49,3 +49,9 @@ def test_export_losses_and_lossless_rle(measured, name, expected):
         assert any(
             "returned no polygons" in warning for warning in case["exportWarnings"]
         )
+
+
+@pytest.mark.parametrize("name", ["rectangle", "pixel"])
+def test_pixel_edge_fixtures_preserve_every_pixel(measured, name):
+    case = next(case for case in measured["roundTrips"] if case["id"] == name)
+    assert case["pixelEdgeCoco"] == case["source"]

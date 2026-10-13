@@ -5,53 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="COCO import and export choices for Supervision, with a decision table and measured round trips.">
   <title>COCO import + export · Supervision choices</title>
-  <link rel="stylesheet" href="choices.css?v=2">
-  <script src="choices.js?v=2" defer></script>
+  <link rel="stylesheet" href="choices.css?v=3">
+  <script src="choices.js?v=3" defer></script>
 </head>
 <body>
 <main>
-  <header><h1>COCO import + export: the choices</h1><nav aria-label="Related evidence"><a href="./">Before / after</a><a href="https://github.com/cdeil/supervision-poly-check">Reproducer</a><a href="https://github.com/roboflow/supervision/pull/2714">PR #2714</a></nav></header>
-  <p class="scope"><strong>PR today:</strong> optional COCO polygon → mask conversion only. Default behavior and export stay unchanged.<br><strong>Missing decision:</strong> should we fix mask → COCO export too? Options 3 and 4 below include it.</p>
+  <header><h1>COCO import + export: proposed scope</h1><nav aria-label="Related evidence"><a href="./">Before / after</a><a href="https://github.com/cdeil/supervision-poly-check">Reproducer</a><a href="https://github.com/roboflow/supervision/pull/2714">PR #2714</a></nav></header>
+  <p class="scope"><strong>Suggested:</strong> two PRs, one release. <strong>PR today:</strong> opt-in import only. Maintainers choose the changes below.</p>
+
+  <div class="proposal">
+    <section aria-labelledby="import-heading"><h2 id="import-heading"><span class="number">1</span> COCO import · rework #2714</h2><p>Reference rasterization for all COCO polygons. <strong>Implementation open:</strong> core pycocotools or a NumPy port. Either must match the reference in a base install.</p></section>
+    <section aria-labelledby="export-heading"><h2 id="export-heading"><span class="number">2</span> COCO export · follow-up PR</h2><p>Exact mask round trips; encoding independent of <code>iscrowd</code>. <strong>Preference:</strong> pixel-edge polygons by default, explicit RLE; holes need a policy.</p></section>
+  </div>
+  <p class="small scope"><strong>COCO only:</strong> <code>from_yolo</code>, <code>from_labelme</code>, <code>from_pascal_voc</code> and <code>polygon_to_mask</code> keep their existing inclusive fill. Existing RLE import is unchanged.</p>
 
   <section aria-labelledby="decision-heading">
-    <div class="section-bar"><h2 id="decision-heading">Compare the complete choices</h2><p class="small rating-key"><b class="plus">+</b> meets goal <b class="mixed">0</b> conditional <b class="minus">−</b> trade-off</p></div>
+    <div class="section-bar"><h2 id="decision-heading">Export default: a separate choice</h2><p class="small rating-key"><b class="plus">+</b> meets goal <b class="mixed">0</b> needs a policy <b class="minus">−</b> incompatible</p></div>
     <div class="table-scroll"><table class="decision">
-      <thead><tr><th scope="col">Goal</th><th scope="col"><span class="number">1</span> Keep today</th><th scope="col"><span class="number">2</span> COCO import only</th><th scope="col"><span class="number">3</span> COCO import<br>+ RLE export</th><th scope="col"><span class="number">4</span> Both import modes<br>+ RLE export</th></tr></thead>
+      <thead><tr><th scope="col">Goal</th><th scope="col">Pixel-edge polygons <span class="preference">preferred</span></th><th scope="col">RLE</th></tr></thead>
       <tbody>
-        <tr><th scope="row">Reference COCO polygon masks</th><td><b class="minus">−</b> differs</td><td><b class="plus">+</b> default</td><td><b class="plus">+</b> default</td><td><b class="mixed">0</b> opt-in</td></tr>
-        <tr><th scope="row">Existing polygon imports unchanged</th><td><b class="plus">+</b></td><td><b class="minus">−</b></td><td><b class="minus">−</b></td><td><b class="plus">+</b> legacy default</td></tr>
-        <tr><th scope="row">Exact new mask → export → mask</th><td><b class="minus">−</b> already lossy</td><td><b class="minus">−</b> adds losses</td><td><b class="plus">+</b> RLE</td><td><b class="plus">+</b> RLE in either mode</td></tr>
-        <tr><th scope="row">Existing export representation</th><td><b class="plus">+</b></td><td><b class="plus">+</b></td><td><b class="minus">−</b> RLE default</td><td><b class="minus">−</b> RLE default</td></tr>
-        <tr><th scope="row">One polygon import behavior</th><td><b class="plus">+</b></td><td><b class="plus">+</b></td><td><b class="plus">+</b></td><td><b class="minus">−</b> two modes to support</td></tr>
+        <tr><th scope="row">Exact COCO round trip · hole-free masks</th><td><b class="plus">+</b> faithfully traced pixel edges</td><td><b class="plus">+</b> exact bitmap</td></tr>
+        <tr><th scope="row">Masks with holes</th><td><b class="mixed">0</b> define handling / RLE policy</td><td><b class="plus">+</b> exact bitmap</td></tr>
+        <tr><th scope="row">Polygon-only consumers</th><td><b class="plus">+</b> polygon representation</td><td><b class="minus">−</b> RLE support required</td></tr>
       </tbody>
     </table></div>
     <p class="small"><strong><a href="https://github.com/cocodataset/cocoapi/blob/master/PythonAPI/pycocotools/mask.py">RLE</a> (run-length encoding)</strong> stores consecutive runs of background and foreground pixels as counts, preserving the binary mask exactly.</p>
-    <p class="small"><strong>3 / 4:</strong> RLE by default for masks; explicit polygon export remains available but lossy. Consumers must support RLE; original continuous polygons cannot be recovered from it. No option is selected.</p>
+    <p class="small"><strong>Consumer checks:</strong> <a href="https://github.com/ultralytics/ultralytics/blob/3c14ef9670bf4235df5f4ae218e4f84b29b793c3/ultralytics/data/converter.py#L325">Ultralytics</a> converts non-crowd RLE to box-shaped segments, with a warning. Roboflow RLE upload is unverified. Test both: polygon acceptance does not guarantee identical pixels.</p>
   </section>
 
   <section class="roundtrip" aria-labelledby="roundtrip-heading">
-    <div class="section-bar"><h2 id="roundtrip-heading">Are round trips already broken—or would we make them worse?</h2><label class="controls" for="roundtrip-case">Example <select id="roundtrip-case"><option value="rectangle">4 × 4 rectangle</option><option value="pixel">Single pixel</option><option value="hole">Instance with a hole</option></select></label></div>
+    <div class="section-bar"><h2 id="roundtrip-heading">Why export belongs in the same release</h2><label class="controls" for="roundtrip-case">Example <select id="roundtrip-case"><option value="rectangle">4 × 4 rectangle</option><option value="pixel">Single pixel</option><option value="hole">Instance with a hole</option></select></label></div>
     <div class="roundtrip-masks">
       <article><h3>Original mask</h3><div class="mask-value" id="source-area">—</div><div id="source-plot" class="plot"></div><p>Input bitmap</p></article>
       <article><h3>Today’s round trip</h3><div class="mask-value" id="reload-area">—</div><div id="reload-plot" class="plot"></div><p>Current export + current import</p></article>
       <article><h3>Change import only</h3><div class="mask-value" id="reference-reload-area">—</div><div id="reference-reload-plot" class="plot"></div><p>Current export + COCO import</p></article>
+      <article><h3>Pixel edges + COCO</h3><div class="mask-value" id="edges-area">—</div><div id="edges-plot" class="plot"></div><p>Candidate polygon representation</p></article>
       <article><h3>RLE round trip</h3><div class="mask-value" id="rle-area">—</div><div id="rle-plot" class="plot"></div><p>Exact with either importer</p></article>
     </div>
     <p id="roundtrip-result" class="result" aria-live="polite">Loading measured results…</p>
-    <p class="small">Measured Supervision 0.30.9 export/decode helpers, <code>iscrowd=0</code>, no simplification. RLE encoding measured with pycocotools; the new export API is not implemented in our PR.</p>
+    <p class="small">Current export: <code>iscrowd=0</code>, no simplification. Pixel-edge fixtures: hand-authored, decoded by pycocotools. The boundary tracer and new export API are not implemented in #2714.</p>
   </section>
 
   <section aria-labelledby="motivation-heading">
     <h2 id="motivation-heading">Why this matters</h2>
-    <p class="small"><strong>Where we found it:</strong> cross-checking Roboflow’s polygon and mask exports against masks loaded by Supervision exposed different pixels for the same annotation.</p>
-    <p class="small"><strong>Who encounters it:</strong> for example, <a href="https://github.com/roboflow/rf-detr/blob/0e2cd44adbde600d52a256c8cfd531e1103701c9/src/rfdetr/datasets/coco.py">Roboflow’s RF-DETR uses pycocotools for COCO masks</a>, so a Supervision-based check can disagree before any model prediction. Boundary differences can change area, IoU, training targets, and mask AP, especially for small or thin objects.</p>
-    <p class="small"><strong>Benchmark comparisons:</strong> reproducing published results requires matching mask conversion too. Any effect on a specific paper or hosted Roboflow score still needs its evaluation pipeline to be checked.</p>
+    <p class="small">We found this cross-checking Roboflow polygon and mask exports. <a href="https://github.com/roboflow/rf-detr/blob/0e2cd44adbde600d52a256c8cfd531e1103701c9/src/rfdetr/datasets/coco.py">RF-DETR uses pycocotools</a>: tools can disagree on ground truth before any prediction.</p>
+    <p class="small"><strong>Old/new mask IoU:</strong> 4 × 4 square <strong>0.64</strong>; 1 × 5 rectangle <strong>0.42</strong>. Shape and offset matter; some masks are identical. These are mask differences, not measured mAP changes.</p>
+    <p class="small"><strong>After switching:</strong> rerun mask-based evaluations using affected COCO ground truth, especially for small/thin objects. RF-DETR’s own loader and box-only evaluations using unchanged boxes are unaffected. New exports cannot repair old polygon files.</p>
   </section>
 
-  <div class="notes">
-    <section><h2>What an export fix must include</h2><p>Choose encoding independently of <code>iscrowd</code>: RLE must not turn an instance into a crowd. Test pixels, thin regions, holes, multiple parts, and metadata through export and both readers.</p></section>
-    <section><h2>What remains a trade-off</h2><p>New RLE exports cannot repair old polygon files. Switching their importer can still change masks. Polygon-only consumers need the explicit lossy export—or a separately tested boundary-tracing solution.</p></section>
-  </div>
+  <section aria-labelledby="release-heading"><h2 id="release-heading">Maintainer decisions</h2><p class="small"><strong>Implementation, export default, hole policy, one PR or two.</strong> Also choose a documented direct correction (precedent: <a href="https://github.com/roboflow/supervision/pull/2587">#2587</a>) or a transition. The <a href="https://github.com/roboflow/supervision/blob/develop/AGENTS.md#5-deprecating-apis">deprecation policy</a> requires three minor releases before removing deprecated APIs; maintainers decide whether it applies here.</p></section>
 
   <details class="experiment"><summary>Why switching gains some alignment, but not universal compatibility</summary>
     <p class="small">COCO paths in <a href="https://github.com/roboflow/rf-detr/blob/0e2cd44adbde600d52a256c8cfd531e1103701c9/src/rfdetr/datasets/coco.py">RF-DETR</a>, <a href="https://github.com/facebookresearch/detectron2/blob/1e3e13bbf607b54f62205c4c33922521822fb298/detectron2/structures/masks.py">Detectron2</a>, and <a href="https://github.com/pytorch/vision/blob/268ddfce8e7938226c4ec8ed23fc7b9c46b97316/references/detection/coco_utils.py#L11">torchvision’s reference loader</a> use pycocotools. <a href="https://github.com/ultralytics/ultralytics/blob/3c14ef9670bf4235df5f4ae218e4f84b29b793c3/ultralytics/data/utils.py#L560">Ultralytics’ helper</a> truncates vertices before OpenCV fill; Supervision’s COCO loader rounds. These are operation-specific alignments.</p>
@@ -67,7 +69,7 @@
   </details>
 
   <details class="sources"><summary>Scope, sources, reproduce</summary>
-    <p>Only COCO import/export is considered here. Generic drawing and other formats keep their behavior. Reference import needs pycocotools (potentially a COCO extra); missing dependencies should error, not silently select a different fill.</p>
+    <p>Required export tests: single pixels, thin regions, holes, multiple parts and metadata. Pixel-edge polygons preserve a bitmap under the reference fill; neither polygons nor RLE recover the original continuous annotation from that bitmap.</p>
     <p>Export evidence: <a href="https://github.com/roboflow/supervision/blob/0.30.9/src/supervision/dataset/formats/coco.py">Supervision’s COCO exporter</a>. With no explicit crowd flag, it already selects RLE for some topologies; the examples keep <code>iscrowd=0</code>. Recent <a href="https://github.com/roboflow/supervision/pull/2587">#2587</a> changed rounding, not the older inclusive fill.</p>
     <p><a href="https://github.com/cocodataset/cocoapi/issues/659#issuecomment-3037056580">COCO maintainer’s explanation</a> · <a href="https://github.com/roboflow/supervision/pull/2714#issuecomment-6132102140">Supervision maintainer’s question</a> · <a href="choices.json">Measured arrays</a></p>
     <p>Supervision 0.30.9 · pycocotools 2.0.11 · OpenCV 5.0.0.93 · NumPy 2.5.3</p>
